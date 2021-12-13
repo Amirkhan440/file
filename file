@@ -1,0 +1,231 @@
+#coding=utf-8
+#!/usr/bin/python2
+try:
+    import os, sys, time, datetime, random, hashlib, re, threading, json, getpass, urllib, cookielib, requests, platform
+    from multiprocessing.pool import ThreadPool
+except ImportError:
+    os.system('pip2 install requests')
+    os.system('pip2 install mechanize')
+try:
+    os.mkdir('/sdcard/infect.txt')
+except OSError:
+    pass
+
+try:
+    os.mkdir('/sdcard/ids/extract.txt')
+except OSError:
+    pass
+
+os.system('git pull')
+from requests.exceptions import ConnectionError
+dog = platform.release()
+bd = random.randint(20000000.0, 30000000.0)
+sim = random.randint(20000.0, 40000.0)
+header = {'x-fb-connection-bandwidth': repr(bd), 'x-fb-sim-hni': repr(sim), 'x-fb-net-hni': repr(sim), 'x-fb-connection-quality': 'EXCELLENT', 'x-fb-connection-type': 'cell.CTRadioAccessTechnologyHSDPA', 'user-agent': 'Dalvik/1.6.0 (Linux; U; Android 4.4.2; NX55 Build/KOT5506) [FBAN/FB4A;FBAV/106.0.0.26.68;FBBV/45904160;FBDM/{density=3.0,width=1080,height=1920};FBLC/it_IT;FBRV/45904160;FBCR/PosteMobile;FBMF/asus;FBBD/asus;FBPN/com.facebook.katana;FBDV/ASUS_Z00AD;FBSV/5.0;FBOP/1;FBCA/x86:armeabi-v7a;]', 'content-type': 'application/x-www-form-urlencoded', 'x-fb-http-engine': 'Liger'}
+reload(sys)
+sys.setdefaultencoding('utf8')
+logo = '''
+\033[1;97m      ____  ____   _____  ___    __ ______ 
+\033[1;97m     |    ||    \ |     |/  _]  /  ]      |
+\033[1;93m      |  | |  _  ||   __/  [_  /  /|      |
+\033[1;93m      |  | |  |  ||  |_|    _]/  / |_|  |_|
+\033[1;93m      |  | |  |  ||   _]   [_/   \_  |  |  
+\033[1;97m      |  | |  |  ||  | |     \     | |  |  
+\033[1;97m     |____||__|__||__| |_____|\____| |__|  
+\033[1;97m------------------------------------------------- 
+\033[1;97m(~) Author  : Tech Abm
+\033[1;97m(~) Github  : https://github.com/Tech-abm
+\033[1;97m(~) Fb Page : https://facebook.com/Techabm
+\033[1;97m-------------------------------------------------                                     
+'''
+
+idh = []
+back = 0
+
+def fuck_main():
+    os.system("clear")
+    try:
+        token = open("access_token.txt", "r").read()
+        menu()
+    except(KeyError , IOError):
+        print(logo)
+        token = raw_input("[!] Enter FB Token :  ")
+        sav = open("access_token.txt", "w")
+        sav.write(token)
+        sav.close()
+        print("")
+        print("Token Login Has Successfull").center(50)
+        print("")
+        time.sleep(2)
+        menu()
+def menu():
+    os.system("clear")
+    try:
+        token = open("access_token.txt", "r").read()
+    except(KeyError , IOError):
+        fuck_main()
+    try:
+        r = requests.get("https://graph.facebook.com/me?access_token="+token)
+        q = json.loads(r.text)
+        name = q["name"]
+    except(KeyError):
+        print(logo)
+        print("")
+        print("Token Invalid Or Checkpoint").center(50)
+        print("")
+        time.sleep(2)
+        os.system("rm -rf access_token.txt")
+        print("")
+        time.sleep(1)
+        fuck_main()
+    os.system("clear")
+    print(logo)
+    print("\033[1;92m\tToken Login By :\033[1;92m "+name)
+    print("")
+    print("\033[1;97m[\033[1;93m1\033[1;97m] Extract Fb IDs With New And Old")
+    print("\033[1;97m-------------------------------------------------")
+    b()
+def b():
+    option = raw_input("\n[!] Please select a valid option : ")
+    if option =="1":
+        extract()
+   
+def extract():
+    global token
+    idg = []
+    try:
+        token = open('access_token.txt', 'r').read()
+    except IOError:
+        print("")
+        print("Token Invalid Or Checkpoint").center(50)
+        print("")
+        time.sleep(2)
+        fuck_main()
+    os.system('clear')
+    print(logo)
+    f = raw_input('\033[1;97m [\033[1;93m01\033[1;97m] Input Public  ID : ')
+    e = raw_input('\033[1;97m [\033[1;93m02\033[1;97m] Input Public  ID : ')
+    d = raw_input('\033[1;97m [\033[1;93m03\033[1;97m] Input Public  ID : ')
+    c = raw_input('\033[1;97m [\033[1;93m04\033[1;97m] Input Public  ID : ')
+    b = raw_input('\033[1;97m [\033[1;93m05\033[1;97m] Input Public  ID : ')
+    try:
+        r = requests.get('https://graph.facebook.com/' + f + '?access_token=' + token, headers=header)
+        q = json.loads(r.text)
+    except KeyError:
+        print("")
+        print("Invalid Link Or Public ID Not Found").center(50)
+        print("")
+        time.sleep(2)
+        raw_input(' Press enter to back')
+        fuck_main()
+
+    r = requests.get('https://graph.facebook.com/' + f + '/friends?access_token=' + token, headers=header)
+    q = json.loads(r.text)
+    ids = open('ids_friends.txt', 'w')
+    for i in q['data']:
+        uid = i['id']
+        na = i['name']
+        nm = na.rsplit(' ')[0]
+        idg.append(uid + '|' + nm)
+        ids.write(uid + '|' + nm + '\n')
+    try:
+        r = requests.get('https://graph.facebook.com/' + e + '?access_token=' + token, headers=header)
+        q = json.loads(r.text)
+    except KeyError:
+        print("")
+        print("Invalid Link Or Public ID Not Found").center(50)
+        print("")
+        time.sleep(2)
+        raw_input(' Press enter to back')
+        fuck_main()
+
+    r = requests.get('https://graph.facebook.com/' + e + '/friends?access_token=' + token, headers=header)
+    q = json.loads(r.text)
+    ids = open('ids_friends.txt', 'a')
+    for i in q['data']:
+        uid = i['id']
+        na = i['name']
+        nm = na.rsplit(' ')[0]
+        idg.append(uid + '|' + nm)
+        ids.write(uid + '|' + nm + '\n')
+    try:
+        r = requests.get('https://graph.facebook.com/' + d + '?access_token=' + token, headers=header)
+        q = json.loads(r.text)
+    except KeyError:
+        print("")
+        print("Invalid Link Or Public ID Not Found").center(50)
+        print("")
+        time.sleep(2)
+        raw_input(' Press enter to back')
+        fuck_main()
+
+    r = requests.get('https://graph.facebook.com/' + d + '/friends?access_token=' + token, headers=header)
+    q = json.loads(r.text)
+    ids = open('ids_friends.txt', 'a')
+    for i in q['data']:
+        uid = i['id']
+        na = i['name']
+        nm = na.rsplit(' ')[0]
+        idg.append(uid + '|' + nm)
+        ids.write(uid + '|' + nm + '\n')
+    try:
+        r = requests.get('https://graph.facebook.com/' + c + '?access_token=' + token, headers=header)
+        q = json.loads(r.text)
+    except KeyError:
+        print("")
+        print("Invalid Link Or Public ID Not Found").center(50)
+        print("")
+        time.sleep(2)
+        raw_input(' Press enter to back')
+        fuck_main()
+
+    r = requests.get('https://graph.facebook.com/' + c + '/friends?access_token=' + token, headers=header)
+    q = json.loads(r.text)
+    ids = open('ids_friends.txt', 'a')
+    for i in q['data']:
+        uid = i['id']
+        na = i['name']
+        nm = na.rsplit(' ')[0]
+        idg.append(uid + '|' + nm)
+        ids.write(uid + '|' + nm + '\n')
+    try:
+        r = requests.get('https://graph.facebook.com/' + b + '?access_token=' + token, headers=header)
+        q = json.loads(r.text)
+    except KeyError:
+        print("")
+        print("Invalid Link Or Public ID Not Found").center(50)
+        print("")
+        time.sleep(2)
+        raw_input(' Press enter to back')
+        fuck_main()
+
+    r = requests.get('https://graph.facebook.com/' + b + '/friends?access_token=' + token, headers=header)
+    q = json.loads(r.text)
+    ids = open('ids_friends.txt', 'a')
+    for i in q['data']:
+        uid = i['id']
+        na = i['name']
+        nm = na.rsplit(' ')[0]
+        idg.append(uid + '|' + nm)
+        ids.write(uid + '|' + nm + '\n')
+        ids.close()
+        os.system("clear")
+        print(logo)
+        os.system('cp ids_friends.txt /sdcard')
+        os.system('cat ids_friends.txt | grep "100074" >> /sdcard/mjt74.txt')
+        os.system('cat ids_friends.txt | grep "100075" >> /sdcard/mjt75..txt')
+        os.system('rm -rf ids_friends.txt')
+        time.sleep(1)
+        print("\033[1;97m-------------------------------------------------")
+        print("\033[1;92mTotal Extract IDs Has Been Saved ids_friends.txt").center(50)
+        time.sleep(1)
+        print("\033[1;92mTotal Extract 68 - 73 IDs Has Been Saved news.txt").center(50)
+        print("")
+        print("\033[1;97m-------------------------------------------------")
+        time.sleep(1)
+        print("")
+        raw_input("\tPress enter to main menu back")
+        menu()
+
+if __name__ == '__main__':
+    menu()
